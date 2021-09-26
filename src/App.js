@@ -1,25 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import Header from './components/Header';
+import Footer from './components/Footer';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route
+} from "react-router-dom";
+import { withAuth0 } from '@auth0/auth0-react';
+import Home from './components/Home'
+import Login from './components/Login'
+import FavFlowers from './components/FavFlowers'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+
+class App extends React.Component {
+
+  render() {
+    console.log('app', this.props);
+    const { isAuthenticated } = this.props.auth0;
+    return(
+      <>
+        <Router>
+            <Header />
+            <Switch>
+              <Route exact path="/">
+                {/* TODO: if the user is logged in, render the `Home` component, if they are not, render the `Login` component */}
+                {isAuthenticated ? <Home/> : <Login />}
+              </Route>
+
+              <Route exact path="/favFlowers">
+                {/* TODO: if the user is logged in, render the `FavFlowers` component, if they are not, render the `Login` component */}
+
+                {isAuthenticated ?<FavFlowers/> :<Login />}
+              </Route>
+            </Switch>
+            <Footer />
+        </Router>
+      </>
+    );
+  }
 }
 
-export default App;
+export default withAuth0(App);
